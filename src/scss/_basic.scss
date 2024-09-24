@@ -1,0 +1,16 @@
+.gform-theme--framework {
+	.cffgf_padding.gfield {
+		padding: 10px;
+	}
+
+	fieldset.cffgf_padding.gfield {
+		position: relative;
+		padding-top: 29px;
+
+		legend {
+			position: relative;
+			top: 20px;
+			margin-bottom: 0;
+		}
+	}
+}

@@ -1,0 +1,5 @@
+*.lock
+/.env.testing
+/artifacts/
+/node_modules/
+/vendor/

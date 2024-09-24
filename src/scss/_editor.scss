@@ -1,0 +1,27 @@
+.cffgf_button_wrapper {
+	display: flex;
+
+	input {
+		margin-right: 10px;
+	}
+}
+
+#preview_form_container {
+	.gform_wrapper.gravity-theme {
+
+		.cffgf_padding.gfield {
+			padding: 10px;
+		}
+
+		fieldset.cffgf_padding.gfield {
+			position: relative;
+			padding-top: 29px;
+
+			legend {
+				position: relative;
+				top: 20px;
+				margin-bottom: 0;
+			}
+		}
+	}
+}
