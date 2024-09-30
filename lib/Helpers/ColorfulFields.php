@@ -38,10 +38,14 @@ class ColorfulFields {
 	public function cffgf_frontend_labels( $content, $field, $value, $lead_id, $form_id ) {
 		if ( ! is_admin() ) {
 			if ( isset( $field->field_cffgf_label_color ) && ! empty( $field->field_cffgf_label_color ) ) {
-				if ( str_contains( $content, '</legend>' ) ) {
-					$content = str_replace( $field->label . '</legend>', '<span class="cffgf-label" style="color: ' . $field->field_cffgf_label_color . '">' . $field->label . '</span></legend>', $content );
+				if ( 1 === (int) $field->isRequired ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$content = str_replace( $field->label . '<span class="gfield_required">', '<span class="cffgf-label" style="color: ' . $field->field_cffgf_label_color . '">' . $field->label . '</span><span class="gfield_required">', $content );
 				} else {
-					$content = str_replace( $field->label . '</label>', '<span class="cffgf-label" style="color: ' . $field->field_cffgf_label_color . '">' . $field->label . '</span></label>', $content );
+					if ( 'list' === $field->type ) {
+						$content = str_replace( $field->label . '</legend><div', '<span class="cffgf-label" style="color: ' . $field->field_cffgf_label_color . '">' . $field->label . '</span></legend><div', $content );
+					} else {
+						$content = str_replace( $field->label, '<span class="cffgf-label" style="color: ' . $field->field_cffgf_label_color . '">' . $field->label . '</span>', $content );
+					}
 				}
 			}
 		}

@@ -1,30 +1,30 @@
 import { __ } from '@wordpress/i18n';
 
 ( function ( $ ) {
-	//adding setting to fields of type "text"
-	$( document ).ready( function () {
-		for ( const [key] of Object.entries(fieldSettings) ) {
+	// eslint-disable-next-line no-undef
+	if ( !gform.addAction ) {
+		return;
+	}
 
-			if (`${key}` === 'submit') {
-				continue;
+	/*
+	 * adding setting to all fields except submit button
+	 */
+	$( document ).ready( function () {
+		Object.keys(fieldSettings).forEach(key => {
+			if (key !== 'submit') {
+				fieldSettings[key] += ', .cffgf_label_setting, .cffgf_field_setting';
 			}
-			fieldSettings[ `${key}` ] += ', .cffgf_label_setting, .cffgf_field_setting';
-		}
+		});
 	} );
 
-	//binding to the load field settings event to initialize the checkbox
+	/*
+	 * load field settings
+	 */
 	$( document ).on( 'gform_load_field_settings', function ( event, field, form ) {
 		$( "#field_cffgf_label_color" ).val( field.field_cffgf_label_color );
 		$( "#field_cffgf_field_color" ).val( field.field_cffgf_field_color );
 	} );
 
-} )( jQuery );
-
-( function ( $ ) {
-	// eslint-disable-next-line no-undef
-	if ( !gform.addAction ) {
-		return;
-	}
 	/*
      * Set the color for each field after editor is loaded.
  	 */

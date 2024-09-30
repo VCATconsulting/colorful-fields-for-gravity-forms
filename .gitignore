@@ -1,5 +1,6 @@
 *.lock
-/.env.testing
-/artifacts/
-/node_modules/
-/vendor/
+package-lock.json
+/node_modules
+/vendor/*
+!/vendor/autoload.php
+!/vendor/composer

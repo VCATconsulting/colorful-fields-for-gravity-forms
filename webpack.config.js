@@ -6,6 +6,7 @@ module.exports = {
 	entry: {
 		...defaultConfig.entry,
 		index: path.resolve( process.cwd(), 'src', 'index.js' ),
+		cffgf: path.resolve( process.cwd(), 'src', 'cffgf.js' ),
 		frontend: path.resolve( process.cwd(), 'src', 'frontend.js' ),
 	}
 };
