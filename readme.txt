@@ -4,7 +4,7 @@ Contributors: VCATconsulting, shogathu, nida78
 Requires at least: 5.0
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -18,10 +18,10 @@ It offers the opportunity to change the label color and the backround color of a
 
 == Installation ==
 
-1. Install and configure Gravity Forms plugin,
-2. Find this Colorful Fields plugin in the "Add Plugins" page within your WordPress installation or Upload the Colorful Fields plugin to your blog,
-3. Activate it,
-4. Find the colorpicker under every label!
+1. Install and configure Gravity Forms plugin
+2. Find this Colorful Fields plugin in the "Add Plugins" page within your WordPress installation or Upload the Colorful Fields plugin to your blog
+3. Activate it
+4. Find the colorpicker under every label and field background in the form builder
 
 == Screenshots ==
 
@@ -40,6 +40,10 @@ No, this plugin does not offer any filter or action.
 Yes, the plugin checks the contrast of the label color and the background color. If the contrast is too low, the plugin will show a warning.
 
 == Changelog ==
+
+= 1.0.2 =
+
+* update some code comments
 
 = 1.0.1 =
 

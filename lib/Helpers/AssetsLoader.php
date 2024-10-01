@@ -25,7 +25,7 @@ class AssetsLoader {
 	}
 
 	/**
-	 * Register the assets for all blocks.
+	 * Register the assets for the plugin.
 	 */
 	public function register_assets() {
 		$admin_assets_path        = 'build/index.asset.php';
@@ -83,7 +83,7 @@ class AssetsLoader {
 			);
 		}
 
-		// Register the bundled block JS file.
+		// Register the bundled gravity forms editor JS file.
 		if ( file_exists( CFFGF_PATH . $admin_cffgf_scripts_path ) ) {
 			wp_register_script(
 				'cffgf-gf-admin',
@@ -94,7 +94,7 @@ class AssetsLoader {
 			);
 		}
 
-		// Register optional editor only styles.
+		// Register optional gravity forms editor styles.
 		if ( file_exists( CFFGF_PATH . $admin_cffgf_style_path ) ) {
 			wp_register_style(
 				'cffgf-gf-admin',
@@ -125,7 +125,7 @@ class AssetsLoader {
 	}
 
 	/**
-	 * Enqueue the block editor assets.
+	 * Enqueue the gravity forms editor assets.
 	 */
 	public function enqueue_admin_cffgf_assets() {
 		wp_enqueue_script( 'cffgf-gf-admin' );
@@ -138,5 +138,4 @@ class AssetsLoader {
 	public function wp_enqueue_scripts() {
 		wp_enqueue_style( 'cffgf-frontend' );
 	}
-
 }
