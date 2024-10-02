@@ -21,7 +21,7 @@ It offers the opportunity to change the label color and the backround color of a
 1. Install and configure Gravity Forms plugin
 2. Find this Colorful Fields plugin in the "Add Plugins" page within your WordPress installation or Upload the Colorful Fields plugin to your blog
 3. Activate it
-4. Find the colorpicker under every label and field background in the form builder
+4. Find the colorpicker under the general tab for every field in the form editor
 
 == Screenshots ==
 
