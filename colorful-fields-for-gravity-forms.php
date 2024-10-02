@@ -10,7 +10,7 @@
  * Plugin Name: Colorful Fields for Gravity Forms
  * Plugin URI: https://github.com/VCATconsulting/colorful-fields-for-gravity-forms
  * Description: Colorful Fields for Gravity Forms allow you to select a color for field labels and a background color for fields.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: VCAT Consulting GmbH - Team WordPress
  * Author URI: https://www.vcat.de
  * Text Domain: colorful-fields-for-gravity-forms
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CFFGF_VERSION', '1.0.2' );
+define( 'CFFGF_VERSION', '1.0.3' );
 define( 'CFFGF_FILE', __FILE__ );
 define( 'CFFGF_PATH', plugin_dir_path( CFFGF_FILE ) );
 define( 'CFFGF_URL', plugin_dir_url( CFFGF_FILE ) );
@@ -77,16 +77,6 @@ function cffgf_min_php_version_error() {
 	printf(
 		'<div class="error"><p>%s</p></div>',
 		esc_html__( 'Colorful Fields for Gravity Forms requires PHP version 7.4 or higher to function properly. Please upgrade PHP or deactivate Colorful Fields for Gravity Forms.', 'colorful-fields-for-gravity-forms' )
-	);
-}
-
-/**
- * Show an admin notice error message, if the Composer autoloader is missing.
- */
-function cffgf_zip_extension_missing() {
-	printf(
-		'<div class="error"><p>%s</p></div>',
-		esc_html__( 'Colorful Fields for Gravity Forms requires the PHP ZIP extension. Please activate it or ask your hoster to do so.', 'colorful-fields-for-gravity-forms' )
 	);
 }
 

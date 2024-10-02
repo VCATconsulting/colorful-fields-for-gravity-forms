@@ -4,7 +4,7 @@ Contributors: VCATconsulting, shogathu, nida78
 Requires at least: 5.0
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -40,6 +40,10 @@ No, this plugin does not offer any filter or action.
 Yes, the plugin checks the contrast of the label color and the background color. If the contrast is too low, the plugin will show a warning.
 
 == Changelog ==
+
+= 1.0.3 =
+
+* remove unsed text string
 
 = 1.0.2 =
 
