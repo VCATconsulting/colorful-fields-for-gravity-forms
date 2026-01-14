@@ -22,7 +22,15 @@ import { __ } from '@wordpress/i18n';
 	 */
 	$( document ).on( 'gform_load_field_settings', function ( event, field, form ) {
 		$( "#field_cffgf_label_color" ).val( field.field_cffgf_label_color );
-		$( "#field_cffgf_field_color" ).val( field.field_cffgf_field_color );
+
+		let bgColor = field.field_cffgf_field_color;
+
+		// only at initial load, if never set.
+		if (!bgColor) {
+			bgColor = '#ffffff';
+		}
+
+		$("#field_cffgf_field_color").val(bgColor);
 	} );
 
 	/*
