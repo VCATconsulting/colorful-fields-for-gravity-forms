@@ -4,7 +4,7 @@ Contributors: VCATconsulting, shogathu, nida78
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -13,7 +13,7 @@ Add a colorpicker for all field labels and the field background.
 == Description ==
 
 This plugin is an add-on to the [Gravity Forms](https://www.gravityforms.com/ "visit Gravity Forms website") form builder plugin.
-It offers the opportunity to change the label color and the backround color of a field.
+It offers the opportunity to change the label color and the background color of a field.
 
 
 == Installation ==
@@ -41,13 +41,20 @@ Yes, the plugin checks the contrast of the label color and the background color.
 
 == Changelog ==
 
+= 1.1.0 =
+
+* optimize the code
+* update contrast check
+* update security
+* add better assets handlers
+
 = 1.0.4 =
 
 * fix default background color issue (now white is default)
 
 = 1.0.3 =
 
-* remove unsed text string
+* remove unused text string
 
 = 1.0.2 =
 

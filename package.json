@@ -1,10 +1,15 @@
 {
   "name": "@cffgf/colorful-fields-for-gravity-forms",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Colorful Fields for Gravity Forms allow you to select a color for field labels and a background color for fields.",
   "author": "Team WordPress - VCAT Consulting GmbH",
   "license": "GPL-3.0-or-later",
   "main": "build/index.js",
+  "devDependencies": {
+    "@wordpress/eslint-plugin": "^22.19.1",
+    "@wordpress/i18n": "latest",
+    "@wordpress/scripts": "^30.26.2"
+  },
   "scripts": {
     "env:start": "wp-env start",
     "test:e2e": "wp-scripts test-e2e",
@@ -16,24 +21,21 @@
     "format:js": "wp-scripts format-js",
     "format:js:src": "wp-scripts format-js ./src",
     "lint:css": "wp-scripts lint-style",
-    "lint:css:src": "wp-scripts lint-style 'src/**/*.css'",
+    "lint:css:src": "wp-scripts lint-style 'src/**/*.scss'",
+    "lint:css:fix": "wp-scripts lint-style --fix",
     "lint:js": "wp-scripts lint-js",
     "lint:js:src": "wp-scripts lint-js ./src",
+    "lint:js:fix": "wp-scripts lint-js --fix",
     "lint:md:docs": "wp-scripts lint-md-docs",
     "lint:md:js": "wp-scripts lint-md-js",
     "lint:pkg-json": "wp-scripts lint-pkg-json",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:fix": "npm run lint:js:fix && npm run lint:css:fix",
     "make-pot": "wp i18n make-pot . languages/colorful-fields-for-gravity-forms.pot --exclude=vendor,node_modules,src",
     "make-json": "wp i18n make-json languages/ --no-purge",
     "packages-update": "wp-scripts packages-update",
     "postpackages-update": "npm run build",
     "start": "wp-scripts start",
     "test:unit": "wp-scripts test-unit-js"
-  },
-  "devDependencies": {
-    "@wordpress/eslint-plugin": "^17.12.0",
-    "@wordpress/e2e-test-utils": "^7.3.0",
-    "@wordpress/env": "^4.6.0",
-    "@wordpress/scripts": "^27.1.0",
-    "@wordpress/i18n": "^4.55.0"
   }
 }

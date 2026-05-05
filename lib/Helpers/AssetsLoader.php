@@ -19,9 +19,41 @@ class AssetsLoader {
 	public function init() {
 		add_action( 'init', [ $this, 'register_assets' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_scripts' ], 11 );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ], 11 );
-		add_action( 'gform_preview_init', [ $this, 'enqueue_admin_assets' ], 11 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ], 11, 1 );
+		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_assets' ], 11 );
+		add_action( 'gform_preview_init', [ $this, 'enqueue_preview_assets' ], 11 );
 		add_action( 'gform_editor_js', [ $this, 'enqueue_admin_cffgf_assets' ], 9999 );
+	}
+
+	/**
+	 * Load a WordPress asset metadata file with safe defaults.
+	 *
+	 * @param string $relative_path Relative asset metadata path.
+	 * @param array  $fallback Fallback metadata.
+	 *
+	 * @return array
+	 */
+	private function load_asset_metadata( $relative_path, $fallback ) {
+		$asset = $fallback;
+		$path  = CFFGF_PATH . $relative_path;
+
+		if ( file_exists( $path ) ) {
+			$loaded = require $path;
+
+			if ( is_array( $loaded ) ) {
+				$asset = array_merge( $fallback, $loaded );
+			}
+		}
+
+		if ( ! isset( $asset['dependencies'] ) || ! is_array( $asset['dependencies'] ) ) {
+			$asset['dependencies'] = $fallback['dependencies'];
+		}
+
+		if ( ! isset( $asset['version'] ) || ! is_string( $asset['version'] ) ) {
+			$asset['version'] = $fallback['version'];
+		}
+
+		return $asset;
 	}
 
 	/**
@@ -36,10 +68,9 @@ class AssetsLoader {
 		$admin_cffgf_style_path   = 'build/cffgf.css';
 		$frontend_style_path      = 'build/frontend.css';
 
-		if ( file_exists( CFFGF_PATH . $admin_assets_path ) ) {
-			$block_editor_asset = require CFFGF_PATH . $admin_assets_path;
-		} else {
-			$block_editor_asset = [
+		$admin_asset = $this->load_asset_metadata(
+			$admin_assets_path,
+			[
 				'dependencies' => [
 					'wp-i18n',
 					'jquery',
@@ -47,13 +78,12 @@ class AssetsLoader {
 					'block-editor',
 				],
 				'version'      => CFFGF_VERSION,
-			];
-		}
+			]
+		);
 
-		if ( file_exists( CFFGF_PATH . $admin_cffgf_path ) ) {
-			$gf_editor_asset = require CFFGF_PATH . $admin_cffgf_path;
-		} else {
-			$gf_editor_asset = [
+		$gf_editor_asset = $this->load_asset_metadata(
+			$admin_cffgf_path,
+			[
 				'dependencies' => [
 					'wp-i18n',
 					'jquery',
@@ -61,17 +91,16 @@ class AssetsLoader {
 					'block-editor',
 				],
 				'version'      => CFFGF_VERSION,
-			];
-		}
+			]
+		);
 
-		if ( file_exists( CFFGF_PATH . $frontend_assets_path ) ) {
-			$frontend_asset = require CFFGF_PATH . $frontend_assets_path;
-		} else {
-			$frontend_asset = [
+		$frontend_asset = $this->load_asset_metadata(
+			$frontend_assets_path,
+			[
 				'dependencies' => [],
 				'version'      => CFFGF_VERSION,
-			];
-		}
+			]
+		);
 
 		// Register optional editor only styles.
 		if ( file_exists( CFFGF_PATH . $admin_editor_style_path ) ) {
@@ -79,7 +108,7 @@ class AssetsLoader {
 				'cffgf-admin',
 				CFFGF_URL . $admin_editor_style_path,
 				[],
-				$block_editor_asset['version']
+				$admin_asset['version']
 			);
 		}
 
@@ -118,9 +147,29 @@ class AssetsLoader {
 	}
 
 	/**
+	 * Enqueue the cffgf admin assets.
+	 *
+	 * @param string $hook_suffix Current admin hook suffix.
+	 */
+	public function enqueue_admin_assets( $hook_suffix = '' ) {
+		if ( ! $this->is_gravity_forms_admin_screen( $hook_suffix ) ) {
+			return;
+		}
+
+		wp_enqueue_style( 'cffgf-admin' );
+	}
+
+	/**
+	 * Enqueue the GF preview assets.
+	 */
+	public function enqueue_preview_assets() {
+		wp_enqueue_style( 'cffgf-admin' );
+	}
+
+	/**
 	 * Enqueue the block editor assets.
 	 */
-	public function enqueue_admin_assets() {
+	public function enqueue_block_editor_assets() {
 		wp_enqueue_style( 'cffgf-admin' );
 	}
 
@@ -137,5 +186,30 @@ class AssetsLoader {
 	 */
 	public function wp_enqueue_scripts() {
 		wp_enqueue_style( 'cffgf-frontend' );
+	}
+
+	/**
+	 * Check whether the current admin screen belongs to Gravity Forms.
+	 *
+	 * @param string $hook_suffix Current admin hook suffix.
+	 *
+	 * @return bool
+	 */
+	private function is_gravity_forms_admin_screen( $hook_suffix ) {
+		if ( false !== strpos( (string) $hook_suffix, 'gf_' ) || false !== strpos( (string) $hook_suffix, 'gravityforms' ) ) {
+			return true;
+		}
+
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return false;
+		}
+
+		$screen = get_current_screen();
+
+		if ( ! $screen ) {
+			return false;
+		}
+
+		return false !== strpos( (string) $screen->id, 'gf_' ) || false !== strpos( (string) $screen->id, 'gravityforms' );
 	}
 }

@@ -3,7 +3,7 @@
         'name' => 'cffgf/colorful-fields-for-gravity-forms',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '9123d8f27accb5f372ef9ed985d483d56fbb7c48',
+        'reference' => '37306d14400cb6574055f266151b278f3bf98bef',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'cffgf/colorful-fields-for-gravity-forms' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '9123d8f27accb5f372ef9ed985d483d56fbb7c48',
+            'reference' => '37306d14400cb6574055f266151b278f3bf98bef',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

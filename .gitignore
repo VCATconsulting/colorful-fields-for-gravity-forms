@@ -4,3 +4,4 @@ package-lock.json
 /vendor/*
 !/vendor/autoload.php
 !/vendor/composer
+.codex

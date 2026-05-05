@@ -1,5 +1,11 @@
 import { __ } from '@wordpress/i18n';
 
+/* global fieldSettings, SetFieldProperty, ResetFieldAccessibilityWarning */
+
+const isValidHexColor = color => /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test( color || '' );
+
+const normalizeColor = color => isValidHexColor( color ) ? color : '';
+
 ( function ( $ ) {
 	// eslint-disable-next-line no-undef
 	if ( !gform.addAction ) {
@@ -17,20 +23,37 @@ import { __ } from '@wordpress/i18n';
 		});
 	} );
 
+	$( document ).on( 'input', '#field_cffgf_label_color', function () {
+		SetFieldProperty( 'field_cffgf_label_color', this.value );
+	} );
+
+	$( document ).on( 'click', '#field_cffgf_label_reset_color', function () {
+		$( '#field_cffgf_label_color' ).val( '' );
+		SetFieldProperty( 'field_cffgf_label_color', '' );
+	} );
+
+	$( document ).on( 'input', '#field_cffgf_field_color', function () {
+		SetFieldProperty( 'field_cffgf_field_color', this.value );
+	} );
+
+	$( document ).on( 'click', '#field_cffgf_field_reset_color', function () {
+		$( '#field_cffgf_field_color' ).val( '' );
+		SetFieldProperty( 'field_cffgf_field_color', '' );
+	} );
+
 	/*
 	 * load field settings
 	 */
-	$( document ).on( 'gform_load_field_settings', function ( event, field, form ) {
-		$( "#field_cffgf_label_color" ).val( field.field_cffgf_label_color );
+	$( document ).on( 'gform_load_field_settings', function ( event, field ) {
+		$( "#field_cffgf_label_color" ).val( normalizeColor( field.field_cffgf_label_color ) );
 
-		let bgColor = field.field_cffgf_field_color;
+		let bgColor = normalizeColor( field.field_cffgf_field_color );
 
-		// only at initial load, if never set.
-		if (!bgColor) {
+		if ( ! bgColor ) {
 			bgColor = '#ffffff';
 		}
 
-		$("#field_cffgf_field_color").val(bgColor);
+		$( "#field_cffgf_field_color" ).val( bgColor );
 	} );
 
 	/*
@@ -38,10 +61,12 @@ import { __ } from '@wordpress/i18n';
  	 */
 	$( document ).on( "gform_load_form_settings", function ( event, form ) {
 		$( form.fields ).each( function ( index, field ) {
-			$( "#field_" + field.id + " .gfield_label" ).css( "color", field.field_cffgf_label_color );
-			$( "#field_" + field.id + " .gsection_title" ).css( "color", field.field_cffgf_label_color );
+			const labelColor = normalizeColor( field.field_cffgf_label_color );
+			const fieldColor = normalizeColor( field.field_cffgf_field_color );
 
-			$( "#field_" + field.id ).css( "background-color", field.field_cffgf_field_color );
+			$( "#field_" + field.id + " .gfield_label" ).css( "color", labelColor );
+			$( "#field_" + field.id + " .gsection_title" ).css( "color", labelColor );
+			$( "#field_" + field.id ).css( "background-color", fieldColor );
 		} );
 	} );
 
@@ -70,6 +95,9 @@ import { __ } from '@wordpress/i18n';
 		if ( undefined === field.field_cffgf_field_color) {
 			field.field_cffgf_field_color = '';
 		}
+
+		field.field_cffgf_label_color = normalizeColor( field.field_cffgf_label_color );
+		field.field_cffgf_field_color = normalizeColor( field.field_cffgf_field_color );
 
 		$( "#field_" + field.id + " .gfield_label" ).css( "color", field.field_cffgf_label_color );
 		$( "#field_" + field.id + " .gsection_title" ).css( "color", field.field_cffgf_label_color );
@@ -106,17 +134,22 @@ import { __ } from '@wordpress/i18n';
 			/*
 			 * Set label color to default css color if field setting is empty.
 			 */
-			if ( '#' === field.field_cffgf_label_color ) {
+			if ( '' === field.field_cffgf_label_color ) {
 				labelColor = $( "#field_" + field.id + " .gfield_label" ).css( "color" );
 				labelColor = rgb2hex( labelColor );
 			} else {
 				labelColor = field.field_cffgf_label_color;
 			}
 
-			const colorCcontrast = getContrast( labelColor, field.field_cffgf_field_color );
+			if ( ! isValidHexColor( labelColor ) || ! isValidHexColor( field.field_cffgf_field_color ) ) {
+				ResetFieldAccessibilityWarning( 'cffgf_field_setting' );
+				return;
+			}
+
+			const colorContrast = getContrast( labelColor, field.field_cffgf_field_color );
 
 			/* eslint-disable max-len,no-undef */
-			if ( colorCcontrast < 4.5 ) {
+			if ( colorContrast < 4.5 ) {
 				SetFieldAccessibilityWarning( 'cffgf_field_setting', 'below', __( 'This color combination may be hard for people to read. Try using a brighter background color and/or a darker text color.', 'colorful-fields-for-gravity-forms' ) );
 				ResetFieldAccessibilityWarning( 'cffgf_label_setting' );
 			} else {
@@ -136,10 +169,18 @@ function getContrast( hexColor1, hexColor2 ) {
 	 * Convert hex colors in rgb.
 	 */
 	function hexToRgb( hex ) {
+		if ( ! isValidHexColor( hex ) ) {
+			return null;
+		}
+
 		/*
 		 * Remove #.
 		 */
 		hex = hex.replace( '#', '' );
+
+		if ( 3 === hex.length ) {
+			hex = hex.split( '' ).map( char => char + char ).join( '' );
+		}
 
 		/*
 		 * Split hex values in red, green and blue.
@@ -149,8 +190,8 @@ function getContrast( hexColor1, hexColor2 ) {
 		const b = parseInt( hex.substring( 4, 6 ), 16 );
 
 		/*
-		 * Return object with rgb values.
-		 */
+	     * Return object with rgb values.
+	     */
 		return {
 			r,
 			g,
@@ -192,6 +233,10 @@ function getContrast( hexColor1, hexColor2 ) {
 	const rgb1 = hexToRgb( hexColor1 );
 	const rgb2 = hexToRgb( hexColor2 );
 
+	if ( ! rgb1 || ! rgb2 ) {
+		return 1;
+	}
+
 	/*
 	 * Calc contrast and return.
 	 */
@@ -201,12 +246,18 @@ function getContrast( hexColor1, hexColor2 ) {
 /*
  * Convert rgb 2 hex.
  */
-const rgb2hex = ( rgb ) =>
-	`#${ rgb
-		.match( /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/ )
+const rgb2hex = ( rgb ) => {
+	const match = String( rgb || '' ).match( /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/ );
+
+	if ( ! match ) {
+		return '';
+	}
+
+	return `#${ match
 		.slice( 1 )
 		.map( n => parseInt( n, 10 )
 			.toString( 16 )
 			.padStart( 2, '0' ) )
 		.join( '' )
-	}`
+	}`;
+};

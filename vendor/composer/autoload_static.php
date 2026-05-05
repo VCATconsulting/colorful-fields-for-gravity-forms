@@ -4,34 +4,32 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1932319465e75fd01a05150c950b3e7f
+class ComposerStaticInit6a37a5354d416acd461d9aa8b50a924b
 {
     public static $prefixLengthsPsr4 = array (
-        'C' => 
+        'C' =>
         array (
             'CFFGF\\' => 6,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'CFFGF\\' => 
+        'CFFGF\\' =>
         array (
             0 => __DIR__ . '/../..' . '/lib',
         ),
     );
 
     public static $classMap = array (
-        'CFFGF\\Helpers\\AssetsLoader' => __DIR__ . '/../..' . '/lib/Helpers/AssetsLoader.php',
-        'CFFGF\\Helpers\\ColorfulFields' => __DIR__ . '/../..' . '/lib/Helpers/ColorfulFields.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1932319465e75fd01a05150c950b3e7f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1932319465e75fd01a05150c950b3e7f::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1932319465e75fd01a05150c950b3e7f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit6a37a5354d416acd461d9aa8b50a924b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit6a37a5354d416acd461d9aa8b50a924b::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit6a37a5354d416acd461d9aa8b50a924b::$classMap;
 
         }, null, ClassLoader::class);
     }
