@@ -99,7 +99,8 @@ class ColorfulFields {
 						id="field_cffgf_label_color">
 					<input
 						type="button" id="field_cffgf_label_reset_color"
-						value="<?php echo esc_html__( 'Reset label color', 'colorful-fields-for-gravity-forms' ); ?>">
+						value="<?php echo esc_html__( 'Reset label color', 'colorful-fields-for-gravity-forms' ); ?>"
+						onClick="document.getElementById('field_cffgf_label_color').value = ''; SetFieldProperty('field_cffgf_label_color', '');">
 				</div>
 			</li>
 			<li class="cffgf_field_setting field_setting">
@@ -113,7 +114,8 @@ class ColorfulFields {
 						id="field_cffgf_field_color">
 					<input
 						type="button" id="field_cffgf_field_reset_color"
-						value="<?php echo esc_html__( 'Reset background color', 'colorful-fields-for-gravity-forms' ); ?>">
+						value="<?php echo esc_html__( 'Reset background color', 'colorful-fields-for-gravity-forms' ); ?>"
+						onClick="document.getElementById('field_cffgf_field_color').value = ''; SetFieldProperty('field_cffgf_field_color', '');">
 				</div>
 			</li>
 			<?php

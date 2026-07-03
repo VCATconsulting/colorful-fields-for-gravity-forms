@@ -10,7 +10,7 @@
  * Plugin Name: Colorful Fields for Gravity Forms
  * Plugin URI: https://github.com/VCATconsulting/colorful-fields-for-gravity-forms
  * Description: Colorful Fields for Gravity Forms allow you to select a color for field labels and a background color for fields.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: VCAT Consulting GmbH - Team WordPress
  * Author URI: https://www.vcat.de
  * Text Domain: colorful-fields-for-gravity-forms
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'CFFGF_VERSION' ) ) {
-	define( 'CFFGF_VERSION', '1.1.0' );
+	define( 'CFFGF_VERSION', '1.2.0' );
 }
 if ( ! defined( 'CFFGF_FILE' ) ) {
 	define( 'CFFGF_FILE', __FILE__ );

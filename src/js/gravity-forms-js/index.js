@@ -27,18 +27,8 @@ const normalizeColor = color => isValidHexColor( color ) ? color : '';
 		SetFieldProperty( 'field_cffgf_label_color', this.value );
 	} );
 
-	$( document ).on( 'click', '#field_cffgf_label_reset_color', function () {
-		$( '#field_cffgf_label_color' ).val( '' );
-		SetFieldProperty( 'field_cffgf_label_color', '' );
-	} );
-
 	$( document ).on( 'input', '#field_cffgf_field_color', function () {
 		SetFieldProperty( 'field_cffgf_field_color', this.value );
-	} );
-
-	$( document ).on( 'click', '#field_cffgf_field_reset_color', function () {
-		$( '#field_cffgf_field_color' ).val( '' );
-		SetFieldProperty( 'field_cffgf_field_color', '' );
 	} );
 
 	/*
@@ -63,10 +53,12 @@ const normalizeColor = color => isValidHexColor( color ) ? color : '';
 		$( form.fields ).each( function ( index, field ) {
 			const labelColor = normalizeColor( field.field_cffgf_label_color );
 			const fieldColor = normalizeColor( field.field_cffgf_field_color );
+			const fieldSelector = "#field_" + parseInt( field.id, 10 );
 
-			$( "#field_" + field.id + " .gfield_label" ).css( "color", labelColor );
-			$( "#field_" + field.id + " .gsection_title" ).css( "color", labelColor );
-			$( "#field_" + field.id ).css( "background-color", fieldColor );
+			$( fieldSelector + " .gfield_label" ).css( "color", labelColor );
+			$( fieldSelector + " .gsection_title" ).css( "color", labelColor );
+			$( fieldSelector ).css( "background-color", fieldColor );
+
 		} );
 	} );
 
@@ -99,9 +91,11 @@ const normalizeColor = color => isValidHexColor( color ) ? color : '';
 		field.field_cffgf_label_color = normalizeColor( field.field_cffgf_label_color );
 		field.field_cffgf_field_color = normalizeColor( field.field_cffgf_field_color );
 
-		$( "#field_" + field.id + " .gfield_label" ).css( "color", field.field_cffgf_label_color );
-		$( "#field_" + field.id + " .gsection_title" ).css( "color", field.field_cffgf_label_color );
-		$( "#field_" + field.id ).css( "background-color", field.field_cffgf_field_color );
+		const fieldSelector = "#field_" + parseInt( field.id, 10 );
+
+		$( fieldSelector + " .gfield_label" ).css( "color", field.field_cffgf_label_color );
+		$( fieldSelector + " .gsection_title" ).css( "color", field.field_cffgf_label_color );
+		$( fieldSelector ).css( "background-color", field.field_cffgf_field_color );
 
 		/*
 		 * Reset warning if color was reset.
@@ -135,7 +129,7 @@ const normalizeColor = color => isValidHexColor( color ) ? color : '';
 			 * Set label color to default css color if field setting is empty.
 			 */
 			if ( '' === field.field_cffgf_label_color ) {
-				labelColor = $( "#field_" + field.id + " .gfield_label" ).css( "color" );
+				labelColor = $( fieldSelector + " .gfield_label" ).css( "color" );
 				labelColor = rgb2hex( labelColor );
 			} else {
 				labelColor = field.field_cffgf_label_color;

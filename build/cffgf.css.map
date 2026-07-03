@@ -1,0 +1,1 @@
+{"version":3,"file":"cffgf.css","mappings":";;;AAAA;EACC;AACD;AACC;EACC;AACF,C","sources":["webpack://@cffgf/colorful-fields-for-gravity-forms/./src/scss/_cffgf.scss"],"sourcesContent":[".cffgf_button_wrapper {\n\tdisplay: flex;\n\n\tinput {\n\t\tmargin-right: 10px;\n\t}\n}\n"],"names":[],"sourceRoot":""}

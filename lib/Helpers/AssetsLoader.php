@@ -94,6 +94,10 @@ class AssetsLoader {
 			]
 		);
 
+		if ( ! in_array( 'jquery', $gf_editor_asset['dependencies'], true ) ) {
+			$gf_editor_asset['dependencies'][] = 'jquery';
+		}
+
 		$frontend_asset = $this->load_asset_metadata(
 			$frontend_assets_path,
 			[

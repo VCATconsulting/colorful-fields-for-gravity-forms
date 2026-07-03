@@ -2,9 +2,9 @@
 
 Contributors: VCATconsulting, shogathu, nida78
 Requires at least: 5.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -40,6 +40,12 @@ No, this plugin does not offer any filter or action.
 Yes, the plugin checks the contrast of the label color and the background color. If the contrast is too low, the plugin will show a warning.
 
 == Changelog ==
+
+= 1.2.0 =
+
+* FIX: Gravity Forms editor reset behavior for label and field background colors.
+* Reset buttons now clear the visible color input and reset the saved field property directly.
+* Removed redundant delegated JavaScript reset click handlers.
 
 = 1.1.0 =
 
