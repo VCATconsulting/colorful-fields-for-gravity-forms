@@ -13,13 +13,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 
 
-/* global fieldSettings, SetFieldProperty, ResetFieldAccessibilityWarning */
+/* global fieldSettings, SetFieldProperty, ResetFieldAccessibilityWarning, SetFieldAccessibilityWarning */
 
-const isValidHexColor = color => /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color || '');
+const isValidHexColor = color => typeof color === 'string' && /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color);
 const normalizeColor = color => isValidHexColor(color) ? color : '';
 (function ($) {
-  // eslint-disable-next-line no-undef
-  if (!gform.addAction) {
+  if (typeof window.gform?.addAction !== 'function') {
     return;
   }
 
@@ -29,7 +28,7 @@ const normalizeColor = color => isValidHexColor(color) ? color : '';
   $(document).ready(function () {
     Object.keys(fieldSettings).forEach(key => {
       if (key !== 'submit') {
-        fieldSettings[key] += ', .cffgf_label_setting, .cffgf_field_setting';
+        fieldSettings[key] += ', .cffgf_label_setting, .cffgf_field_setting, .cffgf_description_setting';
       }
     });
   });
@@ -39,17 +38,89 @@ const normalizeColor = color => isValidHexColor(color) ? color : '';
   $(document).on('input', '#field_cffgf_field_color', function () {
     SetFieldProperty('field_cffgf_field_color', this.value);
   });
+  $(document).on('input', '#field_cffgf_description_color', function () {
+    SetFieldProperty('field_cffgf_description_color', this.value);
+  });
+  const descriptionSelector = '.gfield_description:not(.validation_message):not(.gfield_validation_message):not(.ginput_counter), .gsection_description, .gform_fileupload_rules, .gform-field-label--type-sub, .ginput_complex label[for^="input_"]';
+  function previewBackground(element) {
+    while (element) {
+      const color = rgb2hex(window.getComputedStyle(element).backgroundColor);
+      if (color) {
+        return color;
+      }
+      element = element.parentElement;
+    }
+    return '#ffffff';
+  }
+  function syncColorPickers(field) {
+    const container = document.getElementById('field_' + parseInt(field.id, 10));
+    function setPicker(property, fallback) {
+      let color = normalizeColor(field[property]) || fallback;
+      if (color.length === 4) {
+        color = '#' + color.slice(1).split('').map(digit => digit + digit).join('');
+      }
+      $('#' + property).val(color);
+    }
+    const label = container?.querySelector('.gfield_label, .gsection_title') || container;
+    const description = container?.querySelector(descriptionSelector) || container;
+    setPicker('field_cffgf_label_color', label ? rgb2hex(window.getComputedStyle(label).color) : '');
+    setPicker('field_cffgf_description_color', description ? rgb2hex(window.getComputedStyle(description).color) : '');
+    setPicker('field_cffgf_field_color', previewBackground(container));
+  }
+  function updateDescription(field, showSettings) {
+    const container = $('#field_' + parseInt(field.id, 10));
+    const targets = container.find(descriptionSelector);
+    targets.css('color', normalizeColor(field.field_cffgf_description_color));
+    if (!showSettings) {
+      return;
+    }
+    const visible = targets.filter(':visible').filter(function () {
+      return this.textContent.trim() && !this.closest('.screen-reader-text, .gform-screen-reader-text') && window.getComputedStyle(this).visibility === 'visible';
+    });
+    const hasDescription = Boolean((field.description || '').trim());
+    $('.cffgf_description_setting').toggle(hasDescription || visible.length > 0);
+    let lowContrast = false;
+    let uncertain = false;
+    visible.each(function () {
+      const text = rgb2hex(window.getComputedStyle(this).color);
+      let background = '';
+      for (let node = this; node; node = node.parentElement) {
+        const style = window.getComputedStyle(node);
+        if (Number(style.opacity) < 1) {
+          background = '';
+          break;
+        }
+        if (background) {
+          continue;
+        }
+        if (style.backgroundImage !== 'none') {
+          break;
+        }
+        background = rgb2hex(style.backgroundColor);
+        if (!background && style.backgroundColor !== 'rgba(0, 0, 0, 0)' && style.backgroundColor !== 'transparent') {
+          break;
+        }
+      }
+      if (text && background) {
+        lowContrast = lowContrast || getContrast(text, background) < 4.5;
+      } else {
+        uncertain = true;
+      }
+    });
+    if (lowContrast || uncertain) {
+      const message = lowContrast ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('A description, upload hint or sub-label has a contrast ratio below 4.5:1.', 'colorful-fields-for-gravity-forms') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Check the contrast of descriptions, upload hints and sub-labels against their background.', 'colorful-fields-for-gravity-forms');
+      SetFieldAccessibilityWarning('cffgf_description_setting', 'below', message);
+    } else {
+      ResetFieldAccessibilityWarning('cffgf_description_setting');
+    }
+  }
 
   /*
    * load field settings
    */
   $(document).on('gform_load_field_settings', function (event, field) {
-    $("#field_cffgf_label_color").val(normalizeColor(field.field_cffgf_label_color));
-    let bgColor = normalizeColor(field.field_cffgf_field_color);
-    if (!bgColor) {
-      bgColor = '#ffffff';
-    }
-    $("#field_cffgf_field_color").val(bgColor);
+    updateDescription(field, true);
+    syncColorPickers(field);
   });
 
   /*
@@ -57,6 +128,7 @@ const normalizeColor = color => isValidHexColor(color) ? color : '';
   	 */
   $(document).on("gform_load_form_settings", function (event, form) {
     $(form.fields).each(function (index, field) {
+      updateDescription(field, false);
       const labelColor = normalizeColor(field.field_cffgf_label_color);
       const fieldColor = normalizeColor(field.field_cffgf_field_color);
       const fieldSelector = "#field_" + parseInt(field.id, 10);
@@ -97,6 +169,10 @@ const normalizeColor = color => isValidHexColor(color) ? color : '';
     $(fieldSelector + " .gfield_label").css("color", field.field_cffgf_label_color);
     $(fieldSelector + " .gsection_title").css("color", field.field_cffgf_label_color);
     $(fieldSelector).css("background-color", field.field_cffgf_field_color);
+    updateDescription(field, true);
+    if (name === 'field_cffgf_label_color' || name === 'field_cffgf_description_color' || name === 'field_cffgf_field_color') {
+      syncColorPickers(field);
+    }
 
     /*
      * Reset warning if color was reset.
@@ -121,7 +197,8 @@ const normalizeColor = color => isValidHexColor(color) ? color : '';
     /*
      * Checks the contrast and adds a warning if the contrast does not meet the WCAG requirement.
      */
-    if ('' !== field.field_cffgf_label_color && '' !== field.field_cffgf_field_color || '' === field.field_cffgf_label_color && '' !== field.field_cffgf_field_color) {
+    if ('' !== field.field_cffgf_field_color) {
+      ResetFieldAccessibilityWarning('cffgf_label_setting');
       let labelColor = '';
 
       /*
@@ -142,7 +219,6 @@ const normalizeColor = color => isValidHexColor(color) ? color : '';
       /* eslint-disable max-len,no-undef */
       if (colorContrast < 4.5) {
         SetFieldAccessibilityWarning('cffgf_field_setting', 'below', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('This color combination may be hard for people to read. Try using a brighter background color and/or a darker text color.', 'colorful-fields-for-gravity-forms'));
-        ResetFieldAccessibilityWarning('cffgf_label_setting');
       } else {
         ResetFieldAccessibilityWarning('cffgf_field_setting');
       }

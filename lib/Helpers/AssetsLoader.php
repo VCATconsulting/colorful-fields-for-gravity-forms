@@ -87,8 +87,6 @@ class AssetsLoader {
 				'dependencies' => [
 					'wp-i18n',
 					'jquery',
-					'wp-util',
-					'block-editor',
 				],
 				'version'      => CFFGF_VERSION,
 			]
